@@ -1,5 +1,5 @@
-import React, { useState, MouseEvent } from "react";
-import "./SpinButton.css";
+import React, { useState } from 'react';
+import './SpinButton.css';
 
 const SpinButton: React.FC = () => {
   const [count, setCount] = useState<number>(0);
@@ -13,7 +13,7 @@ const SpinButton: React.FC = () => {
     setCount((prevCount) => prevCount - 1);
   };
 
-  const toggleTooltip = (event: MouseEvent<HTMLDivElement>) => {
+  const toggleTooltip = () => {
     setIsTooltipVisible(!isTooltipVisible);
   };
 
@@ -21,20 +21,33 @@ const SpinButton: React.FC = () => {
     <section className="spinButtonContainer">
       <div>
         <h1>승객 선택</h1>
-        <div className="spinButtonLabel">
+        <div className="spinButtonLabel" tabIndex={-1}>
           <label>성인</label>
           <div
             className="helpIcon"
             onMouseEnter={toggleTooltip}
             onMouseLeave={toggleTooltip}
+            tabIndex={1}
+            aria-label="최대 인원수는 3명까지 가능합니다"
           >
             ?
             {isTooltipVisible && (
-              <span className="tooltip">최대 인원수는 3명까지 가능합니다</span>
+              <span
+                className="tooltip"
+                role="tooltip"
+                aria-hidden={isTooltipVisible}
+              >
+                최대 인원수는 3명까지 가능합니다
+              </span>
             )}
           </div>
         </div>
-        <button onClick={decrement} className="spinButton">
+
+        <button
+          onClick={decrement}
+          className="spinButton"
+          aria-label="성인 탑승자 한명 줄이기 버튼"
+        >
           -
         </button>
         <input
@@ -42,9 +55,21 @@ const SpinButton: React.FC = () => {
           role="spinbutton"
           readOnly
           className="spinButtonInput"
+          aria-live="assertive"
+          aria-label="성인 탑승객"
           value={count}
         />
-        <button onClick={increment} className="spinButton">
+        <div
+          aria-atomic="true"
+          aria-live="assertive"
+          aria-relevant="additions"
+          hidden
+        ></div>
+        <button
+          onClick={increment}
+          className="spinButton"
+          aria-label="성인 탑승자 한명 늘리기 버튼"
+        >
           +
         </button>
       </div>
